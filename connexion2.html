@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Page de Connection</title>
+     <link rel="stylesheet" href="styles.css">
+ </head>
+ <body>
+     <h2>Connection</h2>
+     <form id="loginForm">
+         <label for="username">Username:</label>
+         <input type="text" id="username" required>
+         <label for="password">Password:</label>
+         <input type="password" id="password" required>
+         <button type="submit">Login</button>
+     </form>
+     <p>Pas de compte? <a href="connexion.html">S'inscrire ici!</a></p>
+     <script src="connexion.html"></script>
+ </body>
+ <script type="text/javascript">
+ document.getElementById('loginForm').addEventListener('submit', function(event) {
+   event.preventDefault();
+
+   const username = document.getElementById('username').value;
+   const password = document.getElementById('password').value;
+
+   if (!username || !password) {
+       alert('Tous les informations doivent être remplis.');
+       return;
+   }
+
+   const users = JSON.parse(localStorage.getItem('users')) || [];
+
+   const user = users.find(u => u.username === username && u.password === password);
+
+   if (user) {
+       localStorage.setItem('loggedInUser', JSON.stringify(user));
+       alert('Utilisateur est connecter avec succes!');
+
+       setTimeout(() => {
+           window.location.href = 'index.html';
+       }, 100);
+   } else {
+       alert("nom de l'utilisateur ou mot de passe est incorrecte.");
+   }
+});
+ </script>
+ </html>
