@@ -19,8 +19,15 @@
      <p>Pas de compte? <a href="connexion.html">S'inscrire ici!</a></p>
      <script src="connexion.html"></script>
  </body>
+  const supabaseUrl = 'https://qbznnsyzkvkacsiepbyc.supabase.co/rest/v1/'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFiem5uc3l6a3ZrYWNzaWVwYnljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0ODQyMTYsImV4cCI6MjA5MzA2MDIxNn0.RrPGb0mSL5XXMoqrmlUKB_A-nEsLSeKK7D95ZyiboVU'
+
+const supabase = window.supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+)
  <script type="text/javascript">
- document.getElementById('loginForm').addEventListener('submit', function(event) {
+ document.getElementById('loginForm').addEventListener('submit', async function(event) {
    event.preventDefault();
 
    const username = document.getElementById('username').value;
