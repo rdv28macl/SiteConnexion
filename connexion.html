@@ -10,6 +10,15 @@
 </head>
 <body>
     <h2>Inscription</h2>
+    <script>
+const supabaseUrl = 'https://qbznnsyzkvkacsiepbyc.supabase.co/rest/v1/'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFiem5uc3l6a3ZrYWNzaWVwYnljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0ODQyMTYsImV4cCI6MjA5MzA2MDIxNn0.RrPGb0mSL5XXMoqrmlUKB_A-nEsLSeKK7D95ZyiboVU'
+
+const supabase = window.supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+)
+</script>
     <form id="signupForm">
         <label for="username">Username:</label>
         <input type="text" id="username" required>
@@ -24,7 +33,7 @@
 
 </body>
 <script type="text/javascript">
-document.getElementById('signupForm').addEventListener('submit', function(event) {
+document.getElementById('signupForm').addEventListener('submit', async function(event) {
    event.preventDefault();
 
    const username = document.getElementById('username').value;
@@ -46,12 +55,22 @@ document.getElementById('signupForm').addEventListener('submit', function(event)
        return;
    }
 
-   const users = JSON.parse(localStorage.getItem('users')) || [];
+   const { data, error } = await supabase
+  .from('users')
+  .insert([
+    {
+      username: username,
+      password: password
+    }
+  ]);
 
-   users.push({ username, password });
-
-   localStorage.setItem('users', JSON.stringify(users));
-
+if (error) {
+  alert('Error saving user');
+  console.log(error);
+} else {
+  alert('Utilisateur est inscrit avec succes!');
+  window.location.href = 'connexion2.html';
+}
    alert('Utilisateur est inscrit avec succes!');
 
    setTimeout(() => {
