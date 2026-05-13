@@ -32,7 +32,41 @@ const RegisterError = document.getElementById("registerError")
 const LoginEmail = document.getElementById("loginEmail");
 const LoginPassword = document.getElementById("loginPassword");
 
+// Gestion du formulaire de connexion
+LoginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
+    // Récupération des valeurs
+    const Email = LoginEmail.value.trim();
+    const Password = LoginPassword.value;
+
+    // Vérification de l'email
+    if (!validateEmail(Email)) {
+        LoginError.textContent = "Adresse email invalide.";
+        return;
+    }
+
+    // Efface les anciens messages d'erreur
+    LoginError.textContent = "";
+
+    // Connexion avec Supabase
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: Email,
+        password: Password
+    });
+
+    // Si erreur
+    if (error) {
+        LoginError.textContent = error.message;
+        return;
+    }
+
+    // Succès
+    console.log("Connexion réussie", data);
+
+    // Redirection vers la page d'accueil
+    window.location.href = "index.html";
+});
 
 //Champs du formulaire d'inscription
 const RegisterEmail = document.getElementById("registerEmail");
