@@ -1,81 +1,145 @@
+//Importation de Supabase
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page D'inscription</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-</head>
-<body>
-    <h2>Inscription</h2>
-    <script>
-const supabaseUrl = 'https://qbznnsyzkvkacsiepbyc.supabase.co/rest/v1/'
-const supabaseKey = 'sb_publishable_JaWRRs_cme4CCnM3hmzXJQ_j6D2BRB4'
 
-const supabase = window.supabase.createClient(
-  supabaseUrl,
-  supabaseKey
-)
-        
-</script>
-    <form id="signupForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" required>
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" required>
-        <button type="submit">Sign Up</button>
-    </form>
-    <p>As tu déja une compte? <a href="connexion2.html">Se connecter ici!</a></p>
-    <script src="signup.js"></script>
-</body>
-    
-<script type="text/javascript">
-document.getElementById('signupForm').addEventListener('submit', async function(event) {
-   event.preventDefault();
+//  Récupère ces infos dans ton dashboard Supabase (URL + publishable/anon key)
+const SUPABASE_URL = "https://qbznnsyzkvkacsiepbyc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_JaWRRs_cme4CCnM3hmzXJQ_j6D2BRB4";
 
-   const username = document.getElementById('username').value;
-   const password = document.getElementById('password').value;
-   const confirmPassword = document.getElementById('confirmPassword').value;
+//  Client Supabase
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-   if (!username || !password || !confirmPassword) {
-       alert('Tous les informations doivent être remplis.');
-       return;
-   }
+// Récupération des boutons Il est important de vérifier votre code HTML pour remplacer btnLogin et btnRegister en fonction de leur id
+const BtnLogin = document.getElementById("btnLogin");
+const BtnRegister = document.getElementById("btnRegister");
 
-   if (password.length < 8) {
-       alert('Le mot de passe doit être au moins 8 charactères de long.');
-       return;
-   }
+//  Récupération des conteneurs de formulaires
+const LoginContainer = document.getElementById("loginFormContainer");
+const RegisterContainer = document.getElementById("registerFormContainer");
 
-   if (password !== confirmPassword) {
-       alert('Les mots de passe ne sont pas identique.');
-       return;
-   }
 
-   const { data, error } = await supabase
-  .from('users')
-  .insert([
-    {
-      username: username,
-      password: password
-    }
-  ]);
+//  Récupération des données
+const LoginForm = document.getElementById("loginForm");
+const RegisterForm = document.getElementById("registerForm");
 
-if (error) {
-  alert('Error saving user');
-  console.log(error);
-} else {
-  alert('Utilisateur est inscrit avec succes!');
-  window.location.href = 'connexion2.html';
+//  Récupération des erreurs
+const LoginError = document.getElementById("loginError");
+const RegisterError = document.getElementById("registerError")
+
+
+//Champs formulaire de connexion
+const LoginEmail = document.getElementById("loginEmail");
+const LoginPassword = document.getElementById("loginPassword");
+
+
+
+//Champs du formulaire d'inscription
+const RegisterEmail = document.getElementById("registerEmail");
+const RegisterPassword = document.getElementById("registerPassword");
+const RegisterPrenom = document.getElementById("registerPrenom");
+const RegisterNom = document.getElementById("registerNom");
+
+
+//  Quand on clique sur "Se connecter", on fait apparître le formulaire   Ceci permet juste de faire apparaître le formulaire
+BtnLogin.addEventListener("click", () => {
+    LoginContainer.classList.remove("hidden");
+    RegisterContainer.classList.add("hidden");
+    LoginError.textContent = "";
+});
+
+
+//  Quand on clique sur "S'inscrire", on fait apparaître le formulaire    Ceci permet juste de faire apparaître le formulaire
+BtnRegister.addEventListener("click", () => {
+    RegisterContainer.classList.remove("hidden");
+    LoginContainer.classList.add("hidden");
+    LoginError.textContent = "";
+});
+
+
+
+//  Fonction de validation de l'email
+function validateEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email.trim());
 }
-   alert('Utilisateur est inscrit avec succes!');
 
-   setTimeout(() => {
-          window.location.href = 'connexion2.html';
-      }, 100);
-  });
-</script>
+
+
+
+
+// Fonction de validation du mot de passe
+function validatePassword (password) {
+    const miniLength = /.{6,}/;
+    const lowercase = /[a-z]/;
+    const uppercase = /[A-Z]/;
+    const number = /[0-9]/;
+    const specialChar = /[!@#$%?&*(),.?":{}|<>]/;
+
+
+    return (
+        miniLength.test(password) &&
+        lowercase.test(password) &&
+        uppercase.test(password) &&
+        number.test(password) &&
+        specialChar.test(password)
+    );
+}
+
+console.log("Tentative inscription", Email, Prenom, Nom);
+
+
+//Contrôle des données du formulaire d'inscription
+RegisterForm.addEventListener("submit", async (event) => {
+    event.preventDefault();     //Empêche l'envoi automatique du formulaire
+
+//  Récupération des valeurs des formulaires
+    const Email = RegisterEmail.value.trim();
+    const Password = RegisterPassword.value;
+    const Prenom = RegisterPrenom.value.trim();
+    const Nom = RegisterNom.value.trim();
+
+
+
+    //  Vérification de l'email
+    if (!validateEmail(Email)) {
+        RegisterError.textContent = "Adresse email invalide.";
+        return;
+    }
+
+    //Vérification mot de passe
+    if (!validatePassword(Password)) {
+        RegisterError.textContent = "Le mot de passe doit contenir au moins 6 caractères, une minuscule, une majuscule, un chiffre et un caractère spécial.";
+        return;
+    }
+    RegisterError.textContent ="";
+
+
+//  Inscription Supabase
+const { data, error } = await supabase.auth.signUp({
+    email: Email,
+    password: Password,
+    options: {
+        data: {
+            prenom: Prenom,
+            nom: Nom
+        }
+    }
+});
+
+    if (error) {
+        RegisterError.textContent = error.message;
+        return;
+    }
+console.log("Réponse Supabase", data, error);
+
+
+
+//  Affichage de la page de connexion
+    RegisterError.textContent = "";
+    LoginContainer.classList.remove("hidden");
+    RegisterContainer.classList.add("hidden");
+
+}
+
+)
+
