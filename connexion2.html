@@ -1,1 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
 
+    <!-- Optional CSS file -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="loginFormContainer">
+        <h1>Se connecter</h1>
+
+        <form id="loginForm">
+            <!-- Email -->
+            <label for="loginEmail">Adresse email :</label>
+            <input
+                type="email"
+                id="loginEmail"
+                name="loginEmail"
+                required
+            >
+
+            <!-- Password -->
+            <label for="loginPassword">Mot de passe :</label>
+            <input
+                type="password"
+                id="loginPassword"
+                name="loginPassword"
+                required
+            >
+
+            <!-- Error message -->
+            <p id="loginError" style="color: red;"></p>
+
+            <!-- Submit button -->
+            <button type="submit">Se connecter</button>
+        </form>
+    </div>
+
+    <!-- Your JavaScript file containing the Supabase login code -->
+    <script type="module" src="connexion.js"></script>
+
+</body>
+</html>
